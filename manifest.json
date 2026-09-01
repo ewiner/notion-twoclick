@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Notion Link Guard",
+  "version": "0.1.0",
+  "description": "Makes links and mentions in Notion pages a two-click experience, like Google Docs: click shows a popover with copy/open actions instead of navigating.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.notion.so/*",
+        "https://notion.so/*",
+        "https://*.notion.so/*",
+        "https://*.notion.site/*"
+      ],
+      "js": ["content.js"],
+      "css": ["popover.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
