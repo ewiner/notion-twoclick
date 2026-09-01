@@ -5,22 +5,19 @@
 // popover with the URL plus copy / open-in-new-tab actions instead of
 // navigating immediately — the Google Docs link behavior.
 //
-// Runs at document_start so our capture listeners register before Notion's
-// own document-level handlers; Notion's editor may navigate from mouseup /
-// pointerup rather than click, so those are guarded too.
-//
 // Deliberately NOT intercepted:
 //   - modifier clicks (cmd/ctrl/shift/alt) and middle clicks — explicit intent
-//   - clicks in the sidebar and topbar/breadcrumbs
+//   - clicks in the sidebar, topbar/breadcrumbs, and other chrome
 //   - non-http(s) hrefs (Notion uses fragment/js hrefs for some controls)
-//   - clicks that end a text-selection drag, or a drag that started elsewhere
-//     (block drag-and-drop released over a link)
 
 (() => {
   'use strict';
 
+  // Set just before we re-dispatch the original click from the popover, so
+  // our capture listener lets that one through to Notion untouched.
+  let bypassNextClick = false;
+  let currentLink = null;
   let currentUrl = null;
-  let lastMouseDownTarget = null;
 
   // ---------------------------------------------------------------- popover
 
@@ -50,7 +47,7 @@
   const newtabBtn = popover.querySelector('[data-action="newtab"]');
 
   function mountPopover() {
-    if (!popover.isConnected && document.body) document.body.appendChild(popover);
+    if (!popover.isConnected) document.body.appendChild(popover);
   }
 
   // Keep clicks inside the popover from moving Notion's caret or triggering
@@ -62,9 +59,11 @@
 
   function showPopover(link) {
     mountPopover();
+    currentLink = link;
     currentUrl = resolveUrl(link);
 
-    urlEl.textContent = currentUrl.href.replace(/^https?:\/\//, '');
+    const display = currentUrl.href.replace(/^https?:\/\//, '');
+    urlEl.textContent = display;
     urlEl.href = currentUrl.href;
     urlEl.title = currentUrl.href;
 
@@ -79,7 +78,7 @@
     const pw = popover.offsetWidth;
     const ph = popover.offsetHeight;
     const margin = 8;
-    const left = Math.min(Math.max(rect.left, margin), window.innerWidth - pw - margin);
+    let left = Math.min(Math.max(rect.left, margin), window.innerWidth - pw - margin);
     let top = rect.bottom + 6;
     if (top + ph > window.innerHeight - margin) top = rect.top - ph - 6;
     popover.style.left = `${Math.round(left)}px`;
@@ -103,16 +102,17 @@
   urlEl.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const url = currentUrl;
+    const link = currentLink;
     hidePopover();
-    if (!url) return;
-    // Same-origin Notion pages navigate in this tab; external links open a
-    // new tab, which is what Notion does by default.
-    if (url.origin === location.origin) {
-      location.assign(url.href);
-    } else {
-      window.open(url.href, '_blank', 'noopener');
+    if (!link || !link.isConnected) {
+      if (currentUrl) window.open(currentUrl.href, '_blank', 'noopener');
+      return;
     }
+    // Re-dispatch the original click so Notion's own handling runs: SPA
+    // navigation for internal pages, new tab for external links.
+    bypassNextClick = true;
+    link.click();
+    bypassNextClick = false;
   });
 
   newtabBtn.addEventListener('click', (e) => {
@@ -152,66 +152,33 @@
     }
   }
 
-  function isGuardedLink(link) {
+  function isInterceptable(link) {
     const url = resolveUrl(link);
     if (!url || !/^https?:$/.test(url.protocol)) return false;
     if (link.closest('#nlg-popover')) return false;
-    // Leave app chrome alone — sidebar, topbar/breadcrumbs. Everything else
-    // (page content, peek modals, database cells, overlays) is guarded.
+    // Leave app chrome alone — sidebar, topbar/breadcrumbs.
     if (link.closest('.notion-sidebar-container, .notion-topbar')) return false;
-    return true;
+    // Only guard links inside actual page content (main frame, peek modals,
+    // and overlays such as link previews).
+    return !!link.closest(
+      '.notion-page-content, .notion-frame, .notion-peek-renderer, .notion-overlay-container'
+    );
   }
-
-  // Is this a plain left-click-style event on a guarded link that did not
-  // start as a drag from somewhere else and is not the end of a selection?
-  function guardTarget(e) {
-    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return null;
-    if (typeof e.button === 'number' && e.button !== 0) return null;
-    if (popover.contains(e.target)) return null;
-    const link = e.target instanceof Element && e.target.closest('a[href]');
-    if (!link || !isGuardedLink(link)) return null;
-    const sel = window.getSelection();
-    if (sel && !sel.isCollapsed && String(sel).length > 0) return 'suppress';
-    return link;
-  }
-
-  document.addEventListener(
-    'mousedown',
-    (e) => {
-      lastMouseDownTarget = e.target;
-    },
-    true
-  );
-
-  // Notion's editor can navigate from mouseup/pointerup handlers rather than
-  // waiting for click, so starve those events for guarded links. Only when
-  // the press started on the same link — releasing a drag (text selection,
-  // block drag-and-drop) over a link must still reach Notion.
-  function onPointerRelease(e) {
-    const result = guardTarget(e);
-    if (!result || result === 'suppress') return;
-    if (
-      !(lastMouseDownTarget instanceof Node) ||
-      !result.contains(lastMouseDownTarget)
-    ) {
-      return;
-    }
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-  }
-  document.addEventListener('pointerup', onPointerRelease, true);
-  document.addEventListener('mouseup', onPointerRelease, true);
 
   document.addEventListener(
     'click',
     (e) => {
+      if (bypassNextClick) return;
       if (popover.contains(e.target)) return; // popover handles its own clicks
 
-      const result = guardTarget(e);
-      if (!result) {
+      const link = e.target.closest && e.target.closest('a[href]');
+      if (!link || !isInterceptable(link)) {
         hidePopover();
         return;
       }
+
+      // Explicit-intent clicks pass through (cmd/ctrl-click new tab, etc.).
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
 
       // Always stop Notion from navigating on a plain click…
       e.preventDefault();
@@ -220,12 +187,13 @@
 
       // …but if this click is the tail end of a text-selection drag, don't
       // pop anything up either — the user is selecting, not linking.
-      if (result === 'suppress') {
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed && String(sel).length > 0) {
         hidePopover();
         return;
       }
 
-      showPopover(result);
+      showPopover(link);
     },
     true
   );

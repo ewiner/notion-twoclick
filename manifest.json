@@ -9,11 +9,13 @@
         "https://www.notion.so/*",
         "https://notion.so/*",
         "https://*.notion.so/*",
-        "https://*.notion.site/*"
+        "https://*.notion.site/*",
+        "https://notion.com/*",
+        "https://*.notion.com/*"
       ],
       "js": ["content.js"],
       "css": ["popover.css"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ]
 }
