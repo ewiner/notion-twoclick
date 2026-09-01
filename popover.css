@@ -1,0 +1,107 @@
+#nlg-popover {
+  position: fixed;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: min(480px, calc(100vw - 16px));
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: rgb(55, 53, 47);
+  border: 1px solid rgba(55, 53, 47, 0.12);
+  box-shadow:
+    rgba(15, 15, 15, 0.05) 0 0 0 1px,
+    rgba(15, 15, 15, 0.1) 0 3px 6px,
+    rgba(15, 15, 15, 0.2) 0 9px 24px;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.2;
+  user-select: none;
+}
+
+#nlg-popover[hidden] {
+  display: none;
+}
+
+#nlg-popover .nlg-glyph {
+  display: inline-flex;
+  flex: none;
+  color: rgba(55, 53, 47, 0.45);
+}
+
+#nlg-popover .nlg-url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(35, 131, 226);
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px 2px;
+  border-radius: 4px;
+}
+
+#nlg-popover .nlg-url:hover {
+  text-decoration: underline;
+}
+
+#nlg-popover .nlg-sep {
+  flex: none;
+  width: 1px;
+  height: 18px;
+  margin: 0 2px;
+  background: rgba(55, 53, 47, 0.16);
+}
+
+#nlg-popover .nlg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(55, 53, 47, 0.65);
+  cursor: pointer;
+}
+
+#nlg-popover .nlg-btn:hover {
+  background: rgba(55, 53, 47, 0.08);
+  color: rgb(55, 53, 47);
+}
+
+/* Notion dark theme (class toggled from content.js) */
+#nlg-popover.nlg-dark {
+  background: rgb(37, 37, 37);
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.13);
+  box-shadow:
+    rgba(0, 0, 0, 0.2) 0 0 0 1px,
+    rgba(0, 0, 0, 0.3) 0 3px 6px,
+    rgba(0, 0, 0, 0.5) 0 9px 24px;
+}
+
+#nlg-popover.nlg-dark .nlg-glyph {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+#nlg-popover.nlg-dark .nlg-url {
+  color: rgb(82, 156, 202);
+}
+
+#nlg-popover.nlg-dark .nlg-sep {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+#nlg-popover.nlg-dark .nlg-btn {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#nlg-popover.nlg-dark .nlg-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
