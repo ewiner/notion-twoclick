@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Notion Link Guard",
+  "name": "Notion TwoClick",
   "version": "0.1.0",
   "description": "Makes links and mentions in Notion pages a two-click experience, like Google Docs: click shows a popover with copy/open actions instead of navigating.",
   "content_scripts": [

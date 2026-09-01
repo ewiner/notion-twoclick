@@ -1,4 +1,4 @@
-// Notion Link Guard
+// Notion TwoClick
 //
 // Intercepts left-clicks on links (including page/person mentions, which
 // Notion renders as anchors) inside Notion page content, and shows a small
@@ -22,7 +22,7 @@
   // ---------------------------------------------------------------- popover
 
   const popover = document.createElement('div');
-  popover.id = 'nlg-popover';
+  popover.id = 'ntc-popover';
   popover.hidden = true;
 
   const ICON_COPY =
@@ -35,14 +35,14 @@
     '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>';
 
   popover.innerHTML = `
-    <span class="nlg-glyph">${ICON_GLOBE}</span>
-    <a class="nlg-url" href="#" title=""></a>
-    <span class="nlg-sep"></span>
-    <button type="button" class="nlg-btn" data-action="copy" title="Copy link">${ICON_COPY}</button>
-    <button type="button" class="nlg-btn" data-action="newtab" title="Open in new tab">${ICON_NEWTAB}</button>
+    <span class="ntc-glyph">${ICON_GLOBE}</span>
+    <a class="ntc-url" href="#" title=""></a>
+    <span class="ntc-sep"></span>
+    <button type="button" class="ntc-btn" data-action="copy" title="Copy link">${ICON_COPY}</button>
+    <button type="button" class="ntc-btn" data-action="newtab" title="Open in new tab">${ICON_NEWTAB}</button>
   `;
 
-  const urlEl = popover.querySelector('.nlg-url');
+  const urlEl = popover.querySelector('.ntc-url');
   const copyBtn = popover.querySelector('[data-action="copy"]');
   const newtabBtn = popover.querySelector('[data-action="newtab"]');
 
@@ -67,7 +67,7 @@
     urlEl.href = currentUrl.href;
     urlEl.title = currentUrl.href;
 
-    popover.classList.toggle('nlg-dark', !!document.querySelector('.notion-dark-theme'));
+    popover.classList.toggle('ntc-dark', !!document.querySelector('.notion-dark-theme'));
     resetCopyButton();
 
     // Position below the clicked link, clamped to the viewport; flip above
@@ -165,7 +165,7 @@
   function isInterceptable(link) {
     const url = resolveUrl(link);
     if (!url || !/^https?:$/.test(url.protocol)) return false;
-    if (link.closest('#nlg-popover')) return false;
+    if (link.closest('#ntc-popover')) return false;
     return inGuardedArea(link);
   }
 
@@ -241,5 +241,5 @@
   window.addEventListener('resize', hidePopover);
   document.addEventListener('visibilitychange', hidePopover);
 
-  console.info('[Notion Link Guard] active');
+  console.info('[Notion TwoClick] active');
 })();

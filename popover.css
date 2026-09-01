@@ -1,4 +1,4 @@
-#nlg-popover {
+#ntc-popover {
   position: fixed;
   z-index: 2147483647;
   display: flex;
@@ -21,17 +21,17 @@
   user-select: none;
 }
 
-#nlg-popover[hidden] {
+#ntc-popover[hidden] {
   display: none;
 }
 
-#nlg-popover .nlg-glyph {
+#ntc-popover .ntc-glyph {
   display: inline-flex;
   flex: none;
   color: rgba(55, 53, 47, 0.45);
 }
 
-#nlg-popover .nlg-url {
+#ntc-popover .ntc-url {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -42,11 +42,11 @@
   border-radius: 4px;
 }
 
-#nlg-popover .nlg-url:hover {
+#ntc-popover .ntc-url:hover {
   text-decoration: underline;
 }
 
-#nlg-popover .nlg-sep {
+#ntc-popover .ntc-sep {
   flex: none;
   width: 1px;
   height: 18px;
@@ -54,7 +54,7 @@
   background: rgba(55, 53, 47, 0.16);
 }
 
-#nlg-popover .nlg-btn {
+#ntc-popover .ntc-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -69,13 +69,13 @@
   cursor: pointer;
 }
 
-#nlg-popover .nlg-btn:hover {
+#ntc-popover .ntc-btn:hover {
   background: rgba(55, 53, 47, 0.08);
   color: rgb(55, 53, 47);
 }
 
 /* Notion dark theme (class toggled from content.js) */
-#nlg-popover.nlg-dark {
+#ntc-popover.ntc-dark {
   background: rgb(37, 37, 37);
   color: rgba(255, 255, 255, 0.9);
   border-color: rgba(255, 255, 255, 0.13);
@@ -85,23 +85,23 @@
     rgba(0, 0, 0, 0.5) 0 9px 24px;
 }
 
-#nlg-popover.nlg-dark .nlg-glyph {
+#ntc-popover.ntc-dark .ntc-glyph {
   color: rgba(255, 255, 255, 0.45);
 }
 
-#nlg-popover.nlg-dark .nlg-url {
+#ntc-popover.ntc-dark .ntc-url {
   color: rgb(82, 156, 202);
 }
 
-#nlg-popover.nlg-dark .nlg-sep {
+#ntc-popover.ntc-dark .ntc-sep {
   background: rgba(255, 255, 255, 0.16);
 }
 
-#nlg-popover.nlg-dark .nlg-btn {
+#ntc-popover.ntc-dark .ntc-btn {
   color: rgba(255, 255, 255, 0.6);
 }
 
-#nlg-popover.nlg-dark .nlg-btn:hover {
+#ntc-popover.ntc-dark .ntc-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.9);
 }

@@ -1,8 +1,8 @@
-# Notion Link Guard
+# Notion TwoClick
 
-A tiny Chrome/Vivaldi extension that makes links (and mentions, which Notion
-renders as links) inside Notion pages a **two-click experience**, like editing
-a Google Doc:
+A tiny Chrome extension that makes links (and mentions, which Notion renders
+as links) inside Notion pages a **two-click experience**, like editing a
+Google Doc:
 
 - A plain left-click on a link **does not navigate**. Instead, a small popover
   appears showing the URL with two actions: **copy link** and **open in new
@@ -16,6 +16,10 @@ a Google Doc:
   from its own click handler) are disabled outright: a plain click on one
   does nothing. Date mentions remain clickable for editing.
 
+> **Provenance:** this extension is vibe-coded — written entirely by Claude
+> (Anthropic's AI), reviewed only by using it. It works, but read it with
+> that in mind.
+
 ## What still works normally
 
 - **Cmd/Ctrl-click, Shift-click, Alt-click, middle-click** — treated as
@@ -28,16 +32,16 @@ a Google Doc:
 The popover dismisses on Escape, scroll, clicking elsewhere, or switching
 tabs. It follows Notion's light/dark theme.
 
-## Install (Vivaldi or Chrome)
+## Install
 
-1. Open `vivaldi://extensions` (or `chrome://extensions`).
+1. Open `chrome://extensions`.
 2. Enable **Developer mode** (toggle in the top-right).
 3. Click **Load unpacked** and select this directory.
 4. Reload any open Notion tabs.
 
 No build step — plain Manifest V3 with a single content script. It runs on
-`notion.so` and public `notion.site` pages, needs no extension permissions
-beyond that, and makes no network requests.
+the Notion app (`notion.com`/`notion.so`) and public `notion.site` pages,
+needs no extension permissions beyond that, and makes no network requests.
 
 ## Not implemented (yet)
 
@@ -48,8 +52,9 @@ which still works — hovering a link is unaffected by this extension.
 
 ## Notes / caveats
 
-- Notion's DOM class names (`notion-frame`, `notion-topbar`, etc.) are not a
-  public API. If Notion renames them, interception may become broader or
-  narrower until the selectors in `content.js` are updated.
+- Notion's DOM class names (`notion-frame`, `notion-topbar`,
+  `notion-text-mention-token`, etc.) are not a public API. If Notion renames
+  them, interception may become broader or narrower until the selectors in
+  `content.js` are updated.
 - Links inside database cells and link previews are also guarded, since they
   live inside page content.
