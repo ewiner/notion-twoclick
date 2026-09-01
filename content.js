@@ -152,17 +152,34 @@
     }
   }
 
+  function inGuardedArea(el) {
+    // Leave app chrome alone — sidebar, topbar/breadcrumbs. Only guard
+    // actual page content (main frame, peek modals, and overlays such as
+    // link previews).
+    if (el.closest('.notion-sidebar-container, .notion-topbar')) return false;
+    return !!el.closest(
+      '.notion-page-content, .notion-frame, .notion-peek-renderer, .notion-overlay-container'
+    );
+  }
+
   function isInterceptable(link) {
     const url = resolveUrl(link);
     if (!url || !/^https?:$/.test(url.protocol)) return false;
     if (link.closest('#nlg-popover')) return false;
-    // Leave app chrome alone — sidebar, topbar/breadcrumbs.
-    if (link.closest('.notion-sidebar-container, .notion-topbar')) return false;
-    // Only guard links inside actual page content (main frame, peek modals,
-    // and overlays such as link previews).
-    return !!link.closest(
-      '.notion-page-content, .notion-frame, .notion-peek-renderer, .notion-overlay-container'
-    );
+    return inGuardedArea(link);
+  }
+
+  // User @-mentions aren't anchors — Notion renders them as
+  // span.notion-text-mention-token and opens the profile from its own click
+  // handler. There's no href to show in a popover, so just swallow the
+  // click. The leading "@" check keeps date mentions (same token class, no
+  // "@" in their display text) clickable for editing.
+  function isUserMention(el) {
+    const mention = el.closest && el.closest('.notion-text-mention-token');
+    if (!mention) return false;
+    if (mention.closest('a[href]')) return false; // page mentions: handled as links
+    if (!/^\s*@/.test(mention.textContent || '')) return false;
+    return inGuardedArea(mention);
   }
 
   document.addEventListener(
@@ -173,6 +190,17 @@
 
       const link = e.target.closest && e.target.closest('a[href]');
       if (!link || !isInterceptable(link)) {
+        // Not a link — but user @-mentions navigate to a profile from
+        // Notion's own click handler. No use case for that; swallow it.
+        if (
+          e.target instanceof Element &&
+          isUserMention(e.target) &&
+          !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0
+        ) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+        }
         hidePopover();
         return;
       }

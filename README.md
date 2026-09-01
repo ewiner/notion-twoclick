@@ -12,6 +12,9 @@ a Google Doc:
   Notion would have done).
 - You can click around, select text, and place your cursor freely without
   accidentally opening tabs or leaving the page.
+- User **@-mentions** (which aren't real links — Notion opens the profile
+  from its own click handler) are disabled outright: a plain click on one
+  does nothing. Date mentions remain clickable for editing.
 
 ## What still works normally
 
