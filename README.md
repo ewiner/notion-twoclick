@@ -1,4 +1,4 @@
-# Notion TwoClick
+# TwoClick for Notion
 
 A tiny Chrome extension that makes links (and mentions, which Notion renders
 as links) inside Notion pages a **two-click experience**, like editing a
@@ -43,6 +43,14 @@ No build step — plain Manifest V3 with a single content script. It runs on
 the Notion app (`notion.com`/`notion.so`) and public `notion.site` pages,
 needs no extension permissions beyond that, and makes no network requests.
 
+## Publishing
+
+- `scripts/package.sh` builds `dist/notion-twoclick-<version>.zip` for
+  upload to the Chrome Web Store. Bump `version` in `manifest.json` first.
+- `scripts/render-icons.sh` regenerates `icons/*.png` from `icons/icon.svg`.
+- Listing copy and privacy-tab answers: [`store/listing.md`](store/listing.md).
+  Privacy policy: [`PRIVACY.md`](PRIVACY.md).
+
 ## Not implemented (yet)
 
 Google Docs' popover also has **Edit** and **Remove** buttons. Those require
@@ -59,3 +67,7 @@ which still works — hovering a link is unaffected by this extension.
 - Links in the page body, page properties, and database views (inline or
   full-page, including peek modals) are guarded. Search results, the sidebar,
   topbar, link previews, and other overlays are left alone.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

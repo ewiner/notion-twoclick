@@ -1,8 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Notion TwoClick",
-  "version": "0.1.0",
-  "description": "Makes links and mentions in Notion pages a two-click experience, like Google Docs: click shows a popover with copy/open actions instead of navigating.",
+  "name": "TwoClick for Notion",
+  "version": "1.0.0",
+  "description": "Clicking a link in a Notion page shows a copy/open popover instead of navigating, like Google Docs.",
+  "homepage_url": "https://github.com/ewiner/notion-twoclick",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": [

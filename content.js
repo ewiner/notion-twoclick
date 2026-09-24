@@ -1,4 +1,4 @@
-// Notion TwoClick
+// TwoClick for Notion
 //
 // Intercepts left-clicks on links (including page/person mentions, which
 // Notion renders as anchors) inside Notion page content, and shows a small
@@ -241,5 +241,5 @@
   window.addEventListener('resize', hidePopover);
   document.addEventListener('visibilitychange', hidePopover);
 
-  console.info('[Notion TwoClick] active');
+  console.info('[TwoClick for Notion] active');
 })();
