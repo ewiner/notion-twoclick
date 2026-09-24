@@ -31,7 +31,9 @@ Not affiliated with or endorsed by Notion Labs, Inc.
 ```
 
 **Store icon:** `icons/icon128.png`
-**Screenshots:** 1280×800 (or 640×400) PNG/JPEG, at least one. TODO.
+**Screenshots** (1280×800, upload in this order): `store/screenshots/1-hero.png`,
+`2-popover.png`, `3-features.png`
+**Small promo tile** (440×280): `store/screenshots/promo-tile-440x280.png`
 **Homepage URL:** https://github.com/ewiner/notion-twoclick
 **Support URL:** https://github.com/ewiner/notion-twoclick/issues
 

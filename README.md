@@ -48,6 +48,8 @@ needs no extension permissions beyond that, and makes no network requests.
 - `scripts/package.sh` builds `dist/notion-twoclick-<version>.zip` for
   upload to the Chrome Web Store. Bump `version` in `manifest.json` first.
 - `scripts/render-icons.sh` regenerates `icons/*.png` from `icons/icon.svg`.
+- `scripts/render-store-images.sh` renders the store screenshots and promo
+  tile from `store/screenshots/slides.html`.
 - Listing copy and privacy-tab answers: [`store/listing.md`](store/listing.md).
   Privacy policy: [`PRIVACY.md`](PRIVACY.md).
 
