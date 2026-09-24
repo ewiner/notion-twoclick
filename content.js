@@ -7,8 +7,8 @@
 //
 // Deliberately NOT intercepted:
 //   - modifier clicks (cmd/ctrl/shift/alt) and middle clicks — explicit intent
-//   - clicks outside .notion-page-content: sidebar, topbar/breadcrumbs,
-//     search results, and other chrome
+//   - clicks in the sidebar, topbar/breadcrumbs, search results, link
+//     previews, and other overlays
 //   - non-http(s) hrefs (Notion uses fragment/js hrefs for some controls)
 
 (() => {
@@ -154,10 +154,12 @@
   }
 
   function inGuardedArea(el) {
-    // Only guard actual page content (main frame and peek modals both render
-    // it). Everything else — sidebar, topbar, search results, and other
-    // overlays — is navigation UI where a single click should just work.
-    return !!el.closest('.notion-page-content');
+    // Guard the page itself — body, properties, and full-page database views —
+    // in the main frame and in peek modals. Leave navigation UI alone:
+    // sidebar, topbar/breadcrumbs, and overlays like search results and link
+    // previews, where a single click should just work.
+    if (el.closest('.notion-sidebar-container, .notion-topbar')) return false;
+    return !!el.closest('.notion-frame, .notion-peek-renderer');
   }
 
   function isInterceptable(link) {
