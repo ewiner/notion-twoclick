@@ -52,9 +52,10 @@ which still works — hovering a link is unaffected by this extension.
 
 ## Notes / caveats
 
-- Notion's DOM class names (`notion-frame`, `notion-topbar`,
+- Notion's DOM class names (`notion-page-content`,
   `notion-text-mention-token`, etc.) are not a public API. If Notion renames
   them, interception may become broader or narrower until the selectors in
   `content.js` are updated.
-- Links inside database cells and link previews are also guarded, since they
-  live inside page content.
+- Only links inside `.notion-page-content` (the page body, including peek
+  modals and inline databases) are guarded. Search results, the sidebar,
+  topbar, full-page database views, and other overlays are left alone.
